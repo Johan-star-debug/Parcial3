@@ -1,6 +1,6 @@
 package uniquindio.edu.co.poo.Model;
 
-public class Pedido {
+public class Pedido implements IPedido{
 
     private String codigo;
     private String nombreCliente;
@@ -60,5 +60,35 @@ public class Pedido {
 
     public void cancelar() {
         this.estado = EstadoPedido.CANCELADO;
+    }
+
+    @Override
+    public String obtenerCodigoPedido() {
+        return "";
+    }
+
+    @Override
+    public String obtenerCliente() {
+        return "";
+    }
+
+    @Override
+    public TipoPan obtenerTipoPan() {
+        return null;
+    }
+
+    @Override
+    public int obtenerCantidad() {
+        return 0;
+    }
+
+    @Override
+    public EstadoPedido obtenerEstado() {
+        return null;
+    }
+
+    @Override
+    public void modificarEstado(EstadoPedido estado) {
+
     }
 }

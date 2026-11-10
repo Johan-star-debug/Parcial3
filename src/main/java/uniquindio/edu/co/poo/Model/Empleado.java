@@ -1,6 +1,6 @@
 package uniquindio.edu.co.poo.Model;
 
-public abstract class Empleado extends Persona {
+public abstract class Empleado extends Persona implements IEmpleado {
 
     private String codigo;
     private int minutosDisponibles;

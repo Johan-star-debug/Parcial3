@@ -15,4 +15,19 @@ public class Cajero extends Empleado {
     public String getCajaAsignada() {
         return cajaAsignada;
     }
+
+    @Override
+    public String obtenerCodigo() {
+        return "";
+    }
+
+    @Override
+    public int obtenerMinutosDisponibles() {
+        return 0;
+    }
+
+    @Override
+    public void reservarMinutos(int minutos) {
+
+    }
 }

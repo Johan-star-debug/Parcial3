@@ -77,15 +77,10 @@ public class Main {
         // Mostrar disponibilidad de empleados
         System.out.println("\n===== DISPONIBILIDAD =====");
 
-        for (Empleado empleado : panaderia.getEmpleados()) {
-
-            System.out.println(
-                    empleado.getNombre()
-                            + " - "
-                            + empleado.getMinutosDisponibles()
-                            + " minutos disponibles"
-            );
-        }
+        panaderia.getEmpleados().stream().map(empleado -> empleado.getNombre()
+                + " - "
+                + empleado.getMinutosDisponibles()
+                + " minutos disponibles").forEach(System.out::println);
 
         // Cancelar un pedido
         System.out.println("\n===== CANCELACION =====");
