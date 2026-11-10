@@ -1,0 +1,43 @@
+Abstracción
+
+¿Qué se solicita finalmente? (Problema)
+
+Se solicita desarrollar un sistema de información para la Panadería El Trigal, utilizando Java y JavaFX, que permita gestionar dinámicamente los empleados y los pedidos de la panadería. El sistema debe facilitar la asignación de pedidos a los panaderos según su disponibilidad de tiempo y permitir cancelar pedidos, recuperando el tiempo que se había reservado.
+
+¿Qué información es relevante dado el problema anterior?
+
+La información necesaria para desarrollar el sistema es:
+- Personas: nombre y documento de identidad.
+- Empleados: código, minutos disponibles y tipo de empleado.
+- Panaderos artesanales: trabajan por bandejas de 12 panes.
+- Panaderos industriales: trabajan por lotes de 30 panes y requieren tiempo de preparación.
+- Cajeros: tienen una caja asignada y no participan en la producción.
+- Pedidos: código, nombre del cliente, tipo de pan, cantidad, estado y empleado asignado.
+- Disponibilidad: minutos que tiene cada panadero para realizar los pedidos.
+- Estados de los pedidos: pendiente, asignado o cancelado.
+
+¿Cómo se agrupa la información relevante?
+
+La información se organiza en diferentes clases para facilitar su administración y comprensión:
+- Personas: contiene los datos generales de las personas.
+- Empleados: representa a los trabajadores de la panadería y sus características.
+- Panaderos: agrupa los tipos de panaderos, artesanal e industrial, mediante herencia y abstracción.
+- Cajeros: representa a los empleados encargados de las cajas.
+- Pedidos: almacena la información de cada pedido realizado.
+- Panadería: administra las listas de empleados y pedidos, además de controlar las operaciones del sistema.
+- Enumeraciones: permiten definir los tipos de pan y los estados de los pedidos.
+
+¿Qué funcionalidades se solicitan finalmente?
+
+El sistema debe permitir:
+1. Registrar empleados dinámicamente, sin tener información precargada o quemada en el código.
+2. Registrar pedidos con sus respectivos datos.
+3. Validar que los códigos de empleados y pedidos no estén duplicados.
+4. Asignar pedidos automáticamente al panadero que tenga suficiente disponibilidad y menor tiempo de producción.
+5. Calcular el tiempo de producción según el tipo de panadero, el tipo de pan y la cantidad solicitada.
+6. Actualizar los minutos disponibles del panadero después de asignar un pedido.
+7. Cancelar pedidos pendientes o asignados.
+8. Devolver los minutos reservados al panadero cuando se cancela un pedido asignado.
+9. Consultar los empleados y pedidos registrados.
+10. Validar los datos ingresados y mostrar mensajes de confirmación o error.
+11. Implementar pruebas unitarias con JUnit 5 para comprobar el funcionamiento de las operaciones principales.
