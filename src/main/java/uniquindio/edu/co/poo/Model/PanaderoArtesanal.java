@@ -18,4 +18,19 @@ public class PanaderoArtesanal extends Panadero {
             return bandejas * 40;
         }
     }
+
+    @Override
+    public String obtenerCodigo() {
+        return "";
+    }
+
+    @Override
+    public int obtenerMinutosDisponibles() {
+        return 0;
+    }
+
+    @Override
+    public void reservarMinutos(int minutos) {
+
+    }
 }

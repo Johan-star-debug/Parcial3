@@ -1,98 +1,401 @@
 package uniquindio.edu.co.poo.App;
 
+import javax.swing.JOptionPane;
 import uniquindio.edu.co.poo.Model.*;
+import uniquindio.edu.co.poo.Controller.*;
 
 public class Main {
 
+    private static Panaderia panaderia = new Panaderia();
+
+    private static EmpleadoController empleadoController =
+            new EmpleadoController(panaderia);
+
+    private static PedidoController pedidoController =
+            new PedidoController(panaderia);
+
     public static void main(String[] args) {
 
-        // Crear la panaderia
-        Panaderia panaderia = new Panaderia();
+        String[] opciones = {
+                "Registrar empleado",
+                "Registrar pedido",
+                "Asignar pedido",
+                "Cancelar pedido",
+                "Consultar empleados",
+                "Consultar pedidos",
+                "Salir"
+        };
 
-        // Crear empleados
-        PanaderoArtesanal ana = new PanaderoArtesanal(
-                "Ana", "123", "A01", 100
+        int opcion;
+
+        do {
+
+            opcion = JOptionPane.showOptionDialog(
+                    null,
+                    "Seleccione una operacion:",
+                    "PANADERIA EL TRIGAL",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]
+            );
+
+            try {
+
+                switch (opcion) {
+
+                    case 0:
+                        registrarEmpleado();
+                        break;
+
+                    case 1:
+                        registrarPedido();
+                        break;
+
+                    case 2:
+                        asignarPedido();
+                        break;
+
+                    case 3:
+                        cancelarPedido();
+                        break;
+
+                    case 4:
+                        consultarEmpleados();
+                        break;
+
+                    case 5:
+                        consultarPedidos();
+                        break;
+
+                    case 6:
+                    case -1:
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Gracias por utilizar Panaderia El Trigal.");
+                        break;
+                }
+
+            } catch (NumberFormatException e) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Debe ingresar un numero valido.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+            } catch (IllegalArgumentException |
+                     IllegalStateException e) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        e.getMessage(),
+                        "Operacion no realizada",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+
+        } while (opcion != 6 && opcion != -1);
+
+        System.exit(0);
+    }
+
+    // REGISTRAR EMPLEADO
+
+    private static void registrarEmpleado() {
+
+        String nombre = pedirTexto("Ingrese el nombre:");
+        if (nombre == null) return;
+
+        String documento = pedirTexto("Ingrese el documento:");
+        if (documento == null) return;
+
+        String codigo = pedirTexto("Ingrese el codigo:");
+        if (codigo == null) return;
+
+        String entradaMinutos = pedirTexto(
+                "Ingrese los minutos disponibles:");
+
+        if (entradaMinutos == null) return;
+
+        int minutos = Integer.parseInt(entradaMinutos);
+
+        if (minutos < 0) {
+            throw new IllegalArgumentException(
+                    "Los minutos no pueden ser negativos");
+        }
+
+        String[] tipos = {
+                "Panadero artesanal",
+                "Panadero industrial",
+                "Cajero"
+        };
+
+        String tipo = (String) JOptionPane.showInputDialog(
+                null,
+                "Seleccione el tipo de empleado:",
+                "Tipo de empleado",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                tipos,
+                tipos[0]
         );
 
-        PanaderoIndustrial carlos = new PanaderoIndustrial(
-                "Carlos", "456", "I01", 120
+        if (tipo == null) return;
+
+        String caja = "";
+
+        if (tipo.equals("Cajero")) {
+
+            caja = pedirTexto("Ingrese la caja asignada:");
+
+            if (caja == null) return;
+        }
+
+        empleadoController.registrarEmpleado(
+                nombre,
+                documento,
+                codigo,
+                minutos,
+                tipo,
+                caja
         );
 
-        Cajero lucia = new Cajero(
-                "Lucia", "789", "C01", 120, "Caja 1"
+        JOptionPane.showMessageDialog(
+                null,
+                "Empleado registrado correctamente."
+        );
+    }
+
+    // REGISTRAR PEDIDO
+
+    private static void registrarPedido() {
+
+        String codigo = pedirTexto(
+                "Ingrese el codigo del pedido:");
+
+        if (codigo == null) return;
+
+        String cliente = pedirTexto(
+                "Ingrese el nombre del cliente:");
+
+        if (cliente == null) return;
+
+        String[] tiposPan = {
+                "TRADICIONAL",
+                "INTEGRAL"
+        };
+
+        String tipoSeleccionado =
+                (String) JOptionPane.showInputDialog(
+                        null,
+                        "Seleccione el tipo de pan:",
+                        "Tipo de pan",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        tiposPan,
+                        tiposPan[0]
+                );
+
+        if (tipoSeleccionado == null) return;
+
+        TipoPan tipoPan = TipoPan.valueOf(tipoSeleccionado);
+
+        String entradaCantidad = pedirTexto(
+                "Ingrese la cantidad de panes:");
+
+        if (entradaCantidad == null) return;
+
+        int cantidad = Integer.parseInt(entradaCantidad);
+
+        pedidoController.registrarPedido(
+                codigo,
+                cliente,
+                tipoPan,
+                cantidad
         );
 
-        // Registrar empleados
-        panaderia.registrarEmpleado(ana);
-        panaderia.registrarEmpleado(carlos);
-        panaderia.registrarEmpleado(lucia);
-
-        // Crear pedidos
-        Pedido pedido1 = new Pedido(
-                "P01", "Restaurante Central",
-                TipoPan.TRADICIONAL, 25
+        JOptionPane.showMessageDialog(
+                null,
+                "Pedido registrado correctamente."
         );
+    }
 
-        Pedido pedido2 = new Pedido(
-                "P02", "Cafeteria Norte",
-                TipoPan.INTEGRAL, 40
+    // ASIGNAR PEDIDO
+
+    private static void asignarPedido() {
+
+        String codigo = pedirTexto(
+                "Ingrese el codigo del pedido que desea asignar:");
+
+        if (codigo == null) return;
+
+        pedidoController.asignarPedido(codigo);
+
+        Pedido pedido = panaderia.buscarPedido(codigo);
+
+        JOptionPane.showMessageDialog(
+                null,
+                "Pedido asignado correctamente.\n\n"
+                        + "Codigo: " + pedido.getCodigo() + "\n"
+                        + "Empleado: " + pedido.getCodigoEmpleado() + "\n"
+                        + "Minutos reservados: "
+                        + pedido.getMinutosReservados()
         );
+    }
 
-        // Registrar pedidos
-        panaderia.registrarPedido(pedido1);
-        panaderia.registrarPedido(pedido2);
+    // CANCELAR PEDIDO
 
-        // Asignar pedidos
-        panaderia.asignarPedido("P01");
-        panaderia.asignarPedido("P02");
+    private static void cancelarPedido() {
 
-        // Mostrar resultados
-        System.out.println("===== PANADERIA EL TRIGAL =====");
+        String codigo = pedirTexto(
+                "Ingrese el codigo del pedido que desea cancelar:");
+
+        if (codigo == null) return;
+
+        pedidoController.cancelarPedido(codigo);
+
+        JOptionPane.showMessageDialog(
+                null,
+                "Pedido cancelado correctamente.\n"
+                        + "Los minutos reservados fueron devueltos."
+        );
+    }
+
+    // CONSULTAR EMPLEADOS
+
+    private static void consultarEmpleados() {
+
+        if (panaderia.getEmpleados().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No hay empleados registrados.");
+
+            return;
+        }
+
+        StringBuilder informacion = new StringBuilder();
+
+        informacion.append("===== EMPLEADOS =====\n\n");
+
+        for (Empleado empleado : panaderia.getEmpleados()) {
+
+            informacion.append("Nombre: ")
+                    .append(empleado.getNombre())
+                    .append("\n");
+
+            informacion.append("Documento: ")
+                    .append(empleado.getDocumento())
+                    .append("\n");
+
+            informacion.append("Codigo: ")
+                    .append(empleado.getCodigo())
+                    .append("\n");
+
+            informacion.append("Minutos disponibles: ")
+                    .append(empleado.getMinutosDisponibles())
+                    .append("\n");
+
+            if (empleado instanceof Cajero) {
+
+                Cajero cajero = (Cajero) empleado;
+
+                informacion.append("Caja asignada: ")
+                        .append(cajero.getCajaAsignada())
+                        .append("\n");
+
+            } else if (empleado instanceof PanaderoArtesanal) {
+
+                informacion.append("Tipo: Panadero artesanal\n");
+
+            } else if (empleado instanceof PanaderoIndustrial) {
+
+                informacion.append("Tipo: Panadero industrial\n");
+            }
+
+            informacion.append("-------------------------\n");
+        }
+
+        JOptionPane.showMessageDialog(
+                null,
+                informacion.toString(),
+                "Consulta de empleados",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    // CONSULTAR PEDIDOS
+
+    private static void consultarPedidos() {
+
+        if (panaderia.getPedidos().isEmpty()) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No hay pedidos registrados.");
+
+            return;
+        }
+
+        StringBuilder informacion = new StringBuilder();
+
+        informacion.append("===== PEDIDOS =====\n\n");
 
         for (Pedido pedido : panaderia.getPedidos()) {
 
-            System.out.println("Codigo: " + pedido.getCodigo());
+            informacion.append("Codigo: ")
+                    .append(pedido.getCodigo())
+                    .append("\n");
 
-            System.out.println("Cliente: "
-                    + pedido.getNombreCliente());
+            informacion.append("Cliente: ")
+                    .append(pedido.getNombreCliente())
+                    .append("\n");
 
-            System.out.println("Tipo de pan: "
-                    + pedido.getTipoPan());
+            informacion.append("Tipo de pan: ")
+                    .append(pedido.getTipoPan())
+                    .append("\n");
 
-            System.out.println("Cantidad: "
-                    + pedido.getCantidad());
+            informacion.append("Cantidad: ")
+                    .append(pedido.getCantidad())
+                    .append("\n");
 
-            System.out.println("Estado: "
-                    + pedido.getEstado());
+            informacion.append("Estado: ")
+                    .append(pedido.getEstado())
+                    .append("\n");
 
-            System.out.println("Empleado asignado: "
-                    + pedido.getCodigoEmpleado());
+            informacion.append("Empleado asignado: ")
+                    .append(pedido.getCodigoEmpleado() == null
+                            ? "Sin asignar"
+                            : pedido.getCodigoEmpleado())
+                    .append("\n");
 
-            System.out.println("Minutos reservados: "
-                    + pedido.getMinutosReservados());
+            informacion.append("Minutos reservados: ")
+                    .append(pedido.getMinutosReservados())
+                    .append("\n");
 
-            System.out.println("--------------------------");
+            informacion.append("-------------------------\n");
         }
 
-        // Mostrar disponibilidad de empleados
-        System.out.println("\n===== DISPONIBILIDAD =====");
+        JOptionPane.showMessageDialog(
+                null,
+                informacion.toString(),
+                "Consulta de pedidos",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
 
-        panaderia.getEmpleados().stream().map(empleado -> empleado.getNombre()
-                + " - "
-                + empleado.getMinutosDisponibles()
-                + " minutos disponibles").forEach(System.out::println);
+    // SOLICITAR INFORMACION
 
-        // Cancelar un pedido
-        System.out.println("\n===== CANCELACION =====");
+    private static String pedirTexto(String mensaje) {
 
-        panaderia.cancelarPedido("P01");
-
-        System.out.println("Pedido P01 cancelado.");
-
-        System.out.println("Minutos disponibles de Ana: "
-                + ana.getMinutosDisponibles());
-
-        System.out.println("Minutos disponibles de Carlos: "
-                + carlos.getMinutosDisponibles());
+        return JOptionPane.showInputDialog(
+                null,
+                mensaje,
+                "Panaderia El Trigal",
+                JOptionPane.QUESTION_MESSAGE
+        );
     }
 }
